@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "545644391457",
+    "firebase_url": "https://signalprocessing-867b3.firebaseio.com",
+    "project_id": "signalprocessing-867b3",
+    "storage_bucket": "signalprocessing-867b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545644391457:android:f8f58b15118879acab0760",
+        "android_client_info": {
+          "package_name": "com.example.signalprocessing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545644391457-0oflits2uaboqlq7cvfpcu5555bc2fgb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.signalprocessing",
+            "certificate_hash": "43c9be07176c46008b1effafcf528914242a880d"
+          }
+        },
+        {
+          "client_id": "545644391457-kgd3nnrl81peijh30h2dkg1phsd9pqv1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.signalprocessing",
+            "certificate_hash": "a3ca42d101e10109cfbaaa30ffdf3fc97996a91f"
+          }
+        },
+        {
+          "client_id": "545644391457-pvpnqjq488pggoffp8qr4fa74c1rva8f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUdIShw4vpNjbhiWgYqSFqKjEAggVUNFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "545644391457-pvpnqjq488pggoffp8qr4fa74c1rva8f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:545644391457:android:2b5a7b04438cd396ab0760",
+        "android_client_info": {
+          "package_name": "com.example.signalprocessingadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "545644391457-pvpnqjq488pggoffp8qr4fa74c1rva8f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUdIShw4vpNjbhiWgYqSFqKjEAggVUNFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "545644391457-pvpnqjq488pggoffp8qr4fa74c1rva8f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
