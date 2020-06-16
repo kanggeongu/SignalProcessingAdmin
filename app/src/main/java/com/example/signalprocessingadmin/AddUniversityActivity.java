@@ -81,44 +81,59 @@ public class AddUniversityActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(editName.getText().toString().equals("")){
+                    Toast.makeText(AddUniversityActivity.this, "텍스트를 입력하세요", Toast.LENGTH_SHORT).show();
+                }
+                else if(downloadUri==null){
+                    Toast.makeText(AddUniversityActivity.this, "사진을 입력하세요", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            final String UvName = editName.getText().toString();
+                            final String UvImage = downloadUri.toString();
 
-                mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        final String UvName=editName.getText().toString();
-                        final String UvImage=downloadUri.toString();
+                            University newUv = new University(UvName, UvImage);
+                            mDatabaseReference.child("Universities").child(UvName).setValue(newUv);
+                            Toast.makeText(AddUniversityActivity.this, "대학교 입력 성공", Toast.LENGTH_SHORT).show();
+                        }
 
-                        University newUv = new University(UvName,UvImage);
-                        mDatabaseReference.child("Universities").child(UvName).setValue(newUv);
-                        Toast.makeText(AddUniversityActivity.this, "대학교 입력 성공", Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
         mapbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        final String UvName=editName.getText().toString();
-                        final String MapImage=downloadUri.toString();
+                if(editName.getText().toString().equals("")){
+                    Toast.makeText(AddUniversityActivity.this, "텍스트를 입력하세요", Toast.LENGTH_SHORT).show();
+                }
+                else if(downloadUri==null){
+                    Toast.makeText(AddUniversityActivity.this, "사진을 입력하세요", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            final String UvName = editName.getText().toString();
+                            final String MapImage = downloadUri.toString();
 
-                        mDatabaseReference.child("Universities").child(UvName).child("mapphoto").setValue(MapImage);
+                            mDatabaseReference.child("Universities").child(UvName).child("mapphoto").setValue(MapImage);
 
-                        Toast.makeText(AddUniversityActivity.this, "지도 입력 성공", Toast.LENGTH_SHORT).show();
-                    }
+                            Toast.makeText(AddUniversityActivity.this, "지도 입력 성공", Toast.LENGTH_SHORT).show();
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
             }
         });
     }
@@ -126,73 +141,76 @@ public class AddUniversityActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE) {
-            selectedImageUri = data.getData();
-            image.setImageURI(selectedImageUri);
-            Log.d("이미지uri", String.valueOf(selectedImageUri));
+            if(data!=null) {
+                selectedImageUri = data.getData();
+                image.setImageURI(selectedImageUri);
+                Log.d("이미지uri", String.valueOf(selectedImageUri));
 
-            //알림
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("").setMessage("사진을 등록하시겠습니까");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int id)
-                {
-                    StorageReference storageRef = storage.getReference();
-                    Log.d("이미지uri222", String.valueOf(selectedImageUri));
-                    Uri file = Uri.fromFile(new File(getPath(selectedImageUri)));
+                //알림
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("").setMessage("사진을 등록하시겠습니까");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        StorageReference storageRef = storage.getReference();
+                        Log.d("이미지uri222", String.valueOf(selectedImageUri));
+                        Uri file = Uri.fromFile(new File(getPath(selectedImageUri)));
 
-                    final StorageReference UvsRef;
-                    UvsRef = storageRef.child("images/"+file.getLastPathSegment());
-                    final UploadTask uploadTask;
-                    uploadTask = UvsRef.putFile(file);
+                        final StorageReference UvsRef;
+                        UvsRef = storageRef.child("images/" + file.getLastPathSegment());
+                        final UploadTask uploadTask;
+                        uploadTask = UvsRef.putFile(file);
 
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
-                            Toast.makeText(AddUniversityActivity.this, "실패", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                            // ...
-                            Toast.makeText(AddUniversityActivity.this, "성공", Toast.LENGTH_SHORT).show();
-                            //다운로드 url 가져오기
-                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                @Override
-                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                    if (!task.isSuccessful()) {
-                                        throw task.getException();
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                Toast.makeText(AddUniversityActivity.this, "실패", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                // ...
+                                Toast.makeText(AddUniversityActivity.this, "성공", Toast.LENGTH_SHORT).show();
+                                //다운로드 url 가져오기
+                                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            throw task.getException();
+                                        }
+
+                                        // Continue with the task to get the download URL
+                                        return UvsRef.getDownloadUrl();
                                     }
-
-                                    // Continue with the task to get the download URL
-                                    return UvsRef.getDownloadUrl();
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    if (task.isSuccessful()) {
-                                        downloadUri = task.getResult();
-                                    } else {
-                                        // Handle failures
-                                        // ...
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            downloadUri = task.getResult();
+                                        } else {
+                                            // Handle failures
+                                            // ...
+                                        }
                                     }
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int id)
-                {
-                    Toast.makeText(getApplicationContext(), "취소하셧습니다", Toast.LENGTH_SHORT).show();
-                }
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+                                });
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext(), "취소하셧습니다", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "사진을 입력하세요", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
