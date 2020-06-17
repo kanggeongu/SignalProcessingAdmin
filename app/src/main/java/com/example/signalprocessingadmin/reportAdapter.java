@@ -63,7 +63,7 @@ public class reportAdapter extends RecyclerView.Adapter<reportAdapter.CustomView
         holder.buttonImpose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                databaseReference.child("Restricted").child("Users").child(userEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.child("Restricted").child("Users").child(userEmail.replace('.', '_')).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         RestrictedUserData restrictedUserData = dataSnapshot.getValue(RestrictedUserData.class);

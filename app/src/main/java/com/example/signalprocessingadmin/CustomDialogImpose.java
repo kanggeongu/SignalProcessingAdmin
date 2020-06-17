@@ -41,7 +41,16 @@ public class CustomDialogImpose extends Dialog {
         initPalette();
 
         textViewUserEmail.setText(userEmail);
-        textViewEndDate.setText(endDate);
+
+        String date = endDate;
+        textViewEndDate.setText(date);
+    }
+
+    private String int_to_String_day(int m) {
+        String ret = "";
+        if (m < 10) ret = "0";
+        ret += m;
+        return ret;
     }
 
     private void initPalette() {
@@ -62,10 +71,10 @@ public class CustomDialogImpose extends Dialog {
         buttonComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String endDate = Integer.toString(Year) + Integer.toString(Month) + Integer.toString(DayOfMonth);
+                String endDate = Integer.toString(Year) + int_to_String_day(Month) + int_to_String_day(DayOfMonth);
 
                 RestrictedUserData restrictedUserData = new RestrictedUserData(textViewUserEmail.getText().toString(), endDate);
-                databaseReference.child("Restricted").child("Users").child(restrictedUserData.getUserEmail()).setValue(restrictedUserData);
+                databaseReference.child("Restricted").child("Users").child(restrictedUserData.getUserEmail().replace('.', '_')).setValue(restrictedUserData);
 
                 Toast.makeText(v.getContext(),  endDate+ "성공적으로 제재되었습니다", Toast.LENGTH_SHORT).show();
                 dismiss();

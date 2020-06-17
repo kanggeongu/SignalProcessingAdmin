@@ -15,8 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,7 @@ public class WaitAnimalActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private Button buttonRequestedAnimalView, buttonNameContestView;
+    private Spinner spinnerUniv;
 
     private String tag = "namenamename";
 
@@ -62,6 +66,7 @@ public class WaitAnimalActivity extends AppCompatActivity {
         buttonRequestedAnimalView.setBackgroundColor(Color.rgb(255, 0,0));
         buttonNameContestView.setBackgroundColor(Color.rgb(255,255,0));
 
+        set_spinner();
         func();
 
         swipeRefreshLayout.setColorSchemeResources(
@@ -90,6 +95,50 @@ public class WaitAnimalActivity extends AppCompatActivity {
 
         buttonRequestedAnimalView = (Button)findViewById(R.id.buttonRequestedAnimalView);
         buttonNameContestView = (Button)findViewById(R.id.buttonNameContestView);
+
+        spinnerUniv = (Spinner)findViewById(R.id.spinnerUniv);
+    }
+
+    private void set_spinner() {
+        final ArrayList<String> arrayList = new ArrayList<String>();
+
+        mRef.child("Universities").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    arrayList.add(snapshot.getKey());
+                }
+
+                set_spinner2(arrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    void set_spinner2(final ArrayList<String> arrayList) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, arrayList);
+
+        spinnerUniv.setAdapter(adapter);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerUniv.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                univ = (String) spinnerUniv.getItemAtPosition(position);
+                Toast.makeText(WaitAnimalActivity.this, "대학 : " + univ, Toast.LENGTH_SHORT).show();
+                func();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void onClick(View view) {
@@ -275,7 +324,7 @@ public class WaitAnimalActivity extends AppCompatActivity {
 
             mRef.child("AnimalBooks").child(univ).child(animalBook.getAnimalID()).setValue(animalBook);
 
-            Content content = new Content(waitAnimal.getUserID(), waitAnimal.getFeature());
+            Content content = new Content(waitAnimal.getFeature(), waitAnimal.getUserID());
             mRef.child("AnimalBooks").child(univ).child(animalBook.getAnimalID()).child("Contents").child(Long.toString(now)).setValue(content);
 
             mRef.child(func_ID).child(univ).child(waitAnimal.getNameContestID()).child("status").setValue("심사완료");
@@ -318,7 +367,7 @@ public class WaitAnimalActivity extends AppCompatActivity {
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    mRef.child("NameContests").child(univ).child(waitAnimal.getNameContestID()).child("status").setValue("거부");
+                                    mRef.child(func_ID).child(univ).child(waitAnimal.getNameContestID()).child("status").setValue("거부");
                                     Toast.makeText(WaitAnimalActivity.this, "거부되었습니다", Toast.LENGTH_SHORT).show();
                                 }
                             })
