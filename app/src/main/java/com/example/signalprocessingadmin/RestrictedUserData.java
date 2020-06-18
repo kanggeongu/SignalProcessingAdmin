@@ -3,11 +3,11 @@ package com.example.signalprocessingadmin;
 public class RestrictedUserData {
 
     private String userEmail;
-    private String endDate;
+    private int endDate;
 
     RestrictedUserData() {}
 
-    public RestrictedUserData(String userEmail, String endDate) {
+    public RestrictedUserData(String userEmail, int endDate) {
         this.userEmail = userEmail;
         this.endDate = endDate;
     }
@@ -20,11 +20,11 @@ public class RestrictedUserData {
         this.userEmail = userEmail;
     }
 
-    public String getEndDate() {
+    public int getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(int endDate) {
         this.endDate = endDate;
     }
 }

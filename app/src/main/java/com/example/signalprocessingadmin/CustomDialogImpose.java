@@ -27,7 +27,7 @@ public class CustomDialogImpose extends Dialog {
     private CalendarView calendarView;
     private int Year, Month, DayOfMonth;
 
-    public CustomDialogImpose(@NonNull Context context, String userEmail, String endDate) {
+    public CustomDialogImpose(@NonNull Context context, String userEmail, int endDate) {
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.custome_dialog_impose);
@@ -42,8 +42,16 @@ public class CustomDialogImpose extends Dialog {
 
         textViewUserEmail.setText(userEmail);
 
-        String date = endDate;
-        textViewEndDate.setText(date);
+        int date = endDate;
+        String text = "";
+        if(date == -1) {
+            text = "아직 제제받은 적이 없습니다";
+        }
+        else {
+            text = date + "";
+        }
+
+        textViewEndDate.setText(text);
     }
 
     private String int_to_String_day(int m) {
@@ -73,7 +81,7 @@ public class CustomDialogImpose extends Dialog {
             public void onClick(View v) {
                 String endDate = Integer.toString(Year) + int_to_String_day(Month) + int_to_String_day(DayOfMonth);
 
-                RestrictedUserData restrictedUserData = new RestrictedUserData(textViewUserEmail.getText().toString(), endDate);
+                RestrictedUserData restrictedUserData = new RestrictedUserData(textViewUserEmail.getText().toString(), Integer.parseInt(endDate));
                 databaseReference.child("Restricted").child("Users").child(restrictedUserData.getUserEmail().replace('.', '_')).setValue(restrictedUserData);
 
                 Toast.makeText(v.getContext(),  endDate+ "성공적으로 제재되었습니다", Toast.LENGTH_SHORT).show();

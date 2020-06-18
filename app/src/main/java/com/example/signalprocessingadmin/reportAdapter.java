@@ -68,7 +68,7 @@ public class reportAdapter extends RecyclerView.Adapter<reportAdapter.CustomView
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         RestrictedUserData restrictedUserData = dataSnapshot.getValue(RestrictedUserData.class);
                         if (restrictedUserData == null) {
-                            restrictedUserData = new RestrictedUserData(userEmail, "제재받은 적이 없습니다");
+                            restrictedUserData = new RestrictedUserData(userEmail, -1);
                         }
 
                         CustomDialogImpose customDialogImpose = new CustomDialogImpose(v.getContext(), restrictedUserData.getUserEmail(), restrictedUserData.getEndDate());
