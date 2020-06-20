@@ -7,6 +7,7 @@ public class Content implements Serializable {
 
     private String content;
     private String userID;
+    private String contentID;
     private ArrayList<String> reporter;
 
     public String getUserID() {
@@ -19,9 +20,10 @@ public class Content implements Serializable {
 
     public Content(){}
 
-    public Content(String content, String userID){
+    public Content(String content, String userID, String contentID){
         this.content = content;
         this.userID = userID;
+        this.contentID = contentID;
     }
 
     public String getContent() {
@@ -38,6 +40,14 @@ public class Content implements Serializable {
 
     public void setReporter(ArrayList<String> reporter) {
         this.reporter = reporter;
+    }
+
+    public String getContentID() {
+        return contentID;
+    }
+
+    public void setContentID(String contentID) {
+        this.contentID = contentID;
     }
 
     public boolean addReporter(String reporterID){

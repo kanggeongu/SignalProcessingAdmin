@@ -324,7 +324,7 @@ public class WaitAnimalActivity extends AppCompatActivity {
 
             mRef.child("AnimalBooks").child(univ).child(animalBook.getAnimalID()).setValue(animalBook);
 
-            Content content = new Content(waitAnimal.getFeature(), waitAnimal.getUserID());
+            Content content = new Content(waitAnimal.getFeature(), waitAnimal.getUserID(), Long.toString(now));
             mRef.child("AnimalBooks").child(univ).child(animalBook.getAnimalID()).child("Contents").child(Long.toString(now)).setValue(content);
 
             mRef.child(func_ID).child(univ).child(waitAnimal.getNameContestID()).child("status").setValue("심사완료");
