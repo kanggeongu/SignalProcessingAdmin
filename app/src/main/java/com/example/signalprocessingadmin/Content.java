@@ -6,23 +6,16 @@ import java.util.ArrayList;
 public class Content implements Serializable {
 
     private String content;
-    private String userID;
+    private String userName;
     private String contentID;
     private ArrayList<String> reporter;
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
 
     public Content(){}
 
     public Content(String content, String userID, String contentID){
         this.content = content;
-        this.userID = userID;
+        this.userName = userID;
         this.contentID = contentID;
     }
 
@@ -32,6 +25,14 @@ public class Content implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public ArrayList<String> getReporter() {
